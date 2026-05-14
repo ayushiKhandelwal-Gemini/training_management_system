@@ -1,8 +1,15 @@
-import { User } from "../models/user.model";
+import { User, UserInstance } from "../models/user.model";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/jwt";
 
-export const registerUser = async (data: any) => {
+interface RegisterUserPayload {
+  name: string;
+  email: string;
+  password: string;
+  role: "TRAINER" | "STUDENT";
+}
+
+export const registerUser = async (data: RegisterUserPayload) => {
   const hashedPassword = await bcrypt.hash(data.password, 10);
 
   const user = await User.create({
@@ -10,11 +17,11 @@ export const registerUser = async (data: any) => {
     password: hashedPassword,
   });
 
-  return user;
+  return user as UserInstance;
 };
 
 export const loginUser = async (email: string, password: string) => {
-  const user: any = await User.findOne({ where: { email } });
+  const user = (await User.findOne({ where: { email } })) as UserInstance | null;
 
   if (!user) throw new Error("User not found");
 

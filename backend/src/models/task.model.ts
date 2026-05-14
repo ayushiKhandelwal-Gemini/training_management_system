@@ -1,7 +1,28 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/db";
 
-export const Task = sequelize.define(
+export interface TaskAttributes {
+  id: string;
+  title: string;
+  description?: string | null;
+  deadline: Date;
+  trainer_id: string;
+  reference_file_url?: string | null;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface TaskCreationAttributes
+  extends Optional<
+    TaskAttributes,
+    "id" | "description" | "reference_file_url" | "created_at" | "updated_at"
+  > {}
+
+export interface TaskInstance
+  extends Model<TaskAttributes, TaskCreationAttributes>,
+    TaskAttributes {}
+
+export const Task = sequelize.define<TaskInstance, TaskAttributes>(
   "Task",
   {
     id: {
@@ -17,6 +38,7 @@ export const Task = sequelize.define(
 
     description: {
       type: DataTypes.TEXT,
+      allowNull: true,
     },
 
     deadline: {
@@ -31,6 +53,7 @@ export const Task = sequelize.define(
 
     reference_file_url: {
       type: DataTypes.TEXT,
+      allowNull: true,
     },
 
     created_at: {
@@ -44,8 +67,8 @@ export const Task = sequelize.define(
     },
   },
   {
-    tableName: "tasks",  
-    timestamps: true,    
+    tableName: "tasks",
+    timestamps: true,
     createdAt: "created_at",
     updatedAt: "updated_at",
   }

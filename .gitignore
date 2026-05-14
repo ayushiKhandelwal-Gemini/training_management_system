@@ -4,3 +4,6 @@ dist
 build
 coverage
 *.log
+uploads
+
+package-lock.json
