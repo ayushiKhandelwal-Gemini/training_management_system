@@ -5,7 +5,6 @@ import { allowRoles } from "../middlewares/role.middleware";
 
 const router = Router();
 
-// Student submit task
 router.post(
   "/",
   authMiddleware,
@@ -13,7 +12,6 @@ router.post(
   SubmissionController.create
 );
 
-// Student view own submissions
 router.get(
   "/my",
   authMiddleware,
@@ -21,7 +19,7 @@ router.get(
   SubmissionController.mySubmissions
 );
 
-// Trainer view submissions
+
 router.get(
   "/trainer",
   authMiddleware,
@@ -29,7 +27,7 @@ router.get(
   SubmissionController.trainerSubmissions
 );
 
-// Trainer review submission
+
 router.put(
   "/:id/review",
   authMiddleware,

@@ -9,6 +9,8 @@ import taskRoutes from "./routes/task.routes";
 import taskAssignmentRoutes from "./routes/taskAssignment.routes";
 import submissionRoutes from "./routes/submission.routes";
 import "./models"; // Import to initialize associations
+import dashboardRoutes from "./routes/dashboard.routes";
+
 
 const app = express();
 
@@ -27,6 +29,8 @@ app.use("/api/tasks", taskRoutes);
 app.use("/api/task-assignments", taskAssignmentRoutes);
 
 app.use("/api/submission", submissionRoutes);
+
+app.use("/api/dashboard", dashboardRoutes);
 
 const PORT = 5000;
 
