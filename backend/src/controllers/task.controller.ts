@@ -70,7 +70,7 @@ export const getAllTasks = async (
 ) => {
   try {
 
-    const tasks = await getAllTasksService();
+    const tasks = await getAllTasksService(req.user!.id);
 
     return res.status(200).json({
       success: true,
@@ -94,7 +94,8 @@ export const getTaskById = async (
   try {
 
     const task = await getTaskByIdService(
-      getTaskId(req.params.id)
+      getTaskId(req.params.id),
+      req.user!.id
     );
 
     if (!task) {
@@ -136,6 +137,7 @@ export const updateTask = async (
 
     const updatedTask = await updateTaskService(
       getTaskId(req.params.id),
+      req.user!.id,
       {
         ...req.body,
 
@@ -176,7 +178,8 @@ export const deleteTask = async (
   try {
 
     const deletedTask = await deleteTaskService(
-      getTaskId(req.params.id)
+      getTaskId(req.params.id),
+      req.user!.id
     );
 
     if (!deletedTask) {

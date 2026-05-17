@@ -24,8 +24,8 @@ router.post(
   createTask,
 );
 
-router.get("/", authMiddleware, getAllTasks);
-router.get("/:id", authMiddleware, getTaskById);
+router.get("/", authMiddleware, allowRoles("TRAINER"), getAllTasks);
+router.get("/:id", authMiddleware, allowRoles("TRAINER"), getTaskById);
 
 router.put(
   "/:id",

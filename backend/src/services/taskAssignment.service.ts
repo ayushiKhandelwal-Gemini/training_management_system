@@ -6,6 +6,7 @@ import {
   TaskAssignmentInstance,
 } from "../models/task_assignments.model";
 import { Op } from "sequelize";
+import { enqueueEmailJob } from "../queues/email.queue";
 
 export class TaskAssignmentService {
   static async assignTaskToStudents(
@@ -15,6 +16,10 @@ export class TaskAssignmentService {
   ) {
     const task = await Task.findByPk(task_id);
     if (!task) {
+      throw new Error("Task not found");
+    }
+
+    if (task.trainer_id !== trainer_id) {
       throw new Error("Task not found");
     }
 
@@ -58,6 +63,22 @@ export class TaskAssignmentService {
 
 
     const result = await TaskAssignment.bulkCreate(newAssignments);
+    const trainer = await User.findByPk(trainer_id);
+    const assignedStudentIds = new Set(
+      (result as TaskAssignmentInstance[]).map((assignment) => assignment.student_id)
+    );
+
+    (students as UserInstance[])
+      .filter((student) => assignedStudentIds.has(student.id))
+      .forEach((student) => {
+        void enqueueEmailJob("task-assigned", {
+          trainerName: trainer?.name ?? "Your trainer",
+          studentName: student.name,
+          studentEmail: student.email,
+          taskTitle: task.title,
+          deadline: task.deadline.toISOString(),
+        });
+      });
 
     return {
       assigned: result.length,

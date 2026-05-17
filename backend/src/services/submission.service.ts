@@ -7,7 +7,7 @@ import {
   TaskAssignment,
   TaskAssignmentInstance,
 } from "../models/task_assignments.model";
-import { Op } from "sequelize";
+import { enqueueEmailJob } from "../queues/email.queue";
 
 export interface CreateSubmissionPayload {
   assignment_id: string;
@@ -47,6 +47,24 @@ export class SubmissionService {
       status: "SUBMITTED",
       submitted_at: new Date(),
     } as SubmissionCreationAttributes);
+
+    await assignment.update({
+      status: "SUBMITTED",
+    });
+
+    const assignmentDetails = (await TaskAssignment.findByPk(assignment.id, {
+      include: ["task", "trainer", "student"],
+    })) as any;
+
+    if (assignmentDetails?.trainer?.email) {
+      void enqueueEmailJob("submission-created", {
+        trainerName: assignmentDetails.trainer.name,
+        trainerEmail: assignmentDetails.trainer.email,
+        studentName: assignmentDetails.student?.name ?? "A student",
+        taskTitle: assignmentDetails.task?.title ?? "Assigned task",
+        submittedAt: (submission.submitted_at ?? new Date()).toISOString(),
+      });
+    }
 
     return submission;
   }

@@ -5,14 +5,19 @@
   "main": "dist/app.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "dev:email-worker": "ts-node-dev --respawn --transpile-only src/queues/email.worker.ts",
     "build": "tsc",
-    "start": "node dist/app.js"
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "sequelize-cli db:migrate",
+    "start": "node dist/app.js",
+    "start:email-worker": "node dist/queues/email.worker.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "bullmq": "^5.76.9",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",

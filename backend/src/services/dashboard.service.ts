@@ -111,12 +111,7 @@ export const getStudentDashboardService = async (
   // PENDING TASKS
   // =========================
 
-  const pendingTasks = await TaskAssignment.count({
-    where: {
-      student_id: studentId,
-      status: "ASSIGNED",
-    },
-  });
+  const pendingTasks = Math.max(assignedTasks - submittedTasks, 0);
 
 
   // =========================
@@ -155,6 +150,13 @@ export const getStudentDashboardService = async (
         {
           model: Task,
           as: "task",
+        },
+        {
+          model: User,
+          as: "trainer",
+          attributes: {
+            exclude: ["password"],
+          },
         },
       ],
 

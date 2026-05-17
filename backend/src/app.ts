@@ -10,11 +10,17 @@ import taskAssignmentRoutes from "./routes/taskAssignment.routes";
 import submissionRoutes from "./routes/submission.routes";
 import "./models"; // Import to initialize associations
 import dashboardRoutes from "./routes/dashboard.routes";
+import studentRoutes from "./routes/student.routes";
+import profileRoutes from "./routes/profile.routes";
 
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN ?? "*",
+  })
+);
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
@@ -32,7 +38,11 @@ app.use("/api/submission", submissionRoutes);
 
 app.use("/api/dashboard", dashboardRoutes);
 
-const PORT = 5000;
+app.use("/api/students", studentRoutes);
+
+app.use("/api/profile", profileRoutes);
+
+const PORT = Number(process.env.PORT ?? 5000);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
