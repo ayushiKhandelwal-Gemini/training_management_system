@@ -40,16 +40,28 @@ export class TaskAssignmentService {
       throw new Error("Only STUDENT role users can be assigned tasks");
     }
 
-    const existing = await TaskAssignment.findAll({
-      where: {
-        task_id,
-        student_id: { [Op.in]: student_ids },
-      },
-    });
+    const existing = student_ids.length
+      ? await TaskAssignment.findAll({
+          where: {
+            task_id,
+            student_id: { [Op.in]: student_ids },
+          },
+        })
+      : [];
 
     const alreadyAssigned = new Set(
       (existing as TaskAssignmentInstance[]).map((a) => a.student_id)
     );
+
+    const removed = await TaskAssignment.destroy({
+      where: {
+        task_id,
+        trainer_id,
+        ...(student_ids.length
+          ? { student_id: { [Op.notIn]: student_ids } }
+          : {}),
+      },
+    });
 
     const newAssignments: TaskAssignmentCreationAttributes[] = student_ids
       .filter((id) => !alreadyAssigned.has(id))
@@ -83,6 +95,7 @@ export class TaskAssignmentService {
     return {
       assigned: result.length,
       skipped: student_ids.length - result.length,
+      removed,
       data: result as TaskAssignmentInstance[],
     };
   }

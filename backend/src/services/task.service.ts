@@ -81,7 +81,7 @@ export const updateTaskService = async (
 
   await task.update(taskData as Partial<TaskCreationAttributes>);
 
-  if (student_ids && student_ids.length > 0) {
+  if (student_ids) {
     await TaskAssignmentService.assignTaskToStudents(
       taskId,
       student_ids,

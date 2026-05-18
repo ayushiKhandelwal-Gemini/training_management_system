@@ -8,11 +8,10 @@ export const assignTaskSchema  = Joi.object({
 
   student_ids: Joi.array()
     .items(Joi.string().uuid())
-    .min(1)
+    .min(0)
     .unique()
     .required()
     .messages({
       "array.base": "Student IDs must be an array",
-      "array.min": "At least one student is required",
     }),
 });

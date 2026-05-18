@@ -13,6 +13,7 @@ import { useAssignTask } from "../../hooks/useAssignmentQueries";
 import { useStudents } from "../../hooks/useStudentQueries";
 
 import { fileUrl, formatDate, initials } from "../../utils/format";
+import type { Task } from "../../types";
 
 const TasksPage = () => {
   const [search, setSearch] = useState("");
@@ -21,7 +22,7 @@ const TasksPage = () => {
   const [searchStudents, setSearchStudents] = useState("");
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
 
-  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const { data = [], isLoading } = useTasks();
 
@@ -233,7 +234,7 @@ const TasksPage = () => {
                 className="w-full"
                 type="button"
                 isLoading={assignTaskMutation.isPending}
-                disabled={!selectedTask || selectedStudents.length === 0}
+                disabled={!selectedTask}
                 onClick={() => {
                   if (!selectedTask) return;
 

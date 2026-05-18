@@ -4,7 +4,12 @@ import type { AssignTaskPayload, TaskAssignment } from "../types";
 export const assignTask = async (payload: AssignTaskPayload) => {
   const response = await axiosInstance.post<{
     message: string;
-    result: { assigned: number; skipped: number; data: TaskAssignment[] };
+    result: {
+      assigned: number;
+      skipped: number;
+      removed: number;
+      data: TaskAssignment[];
+    };
   }>("/task-assignments", payload);
   return response.data.result;
 };

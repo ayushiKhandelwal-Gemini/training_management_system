@@ -9,7 +9,7 @@ const toTaskFormData = (payload: CreateTaskPayload) => {
   if (payload.reference_file) {
     formData.append("reference_file", payload.reference_file);
   }
-  if (payload.student_ids && payload.student_ids.length > 0) {
+  if (payload.student_ids) {
     formData.append("student_ids", JSON.stringify(payload.student_ids));
   }
 
