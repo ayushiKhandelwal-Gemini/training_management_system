@@ -49,6 +49,11 @@ export const Task = sequelize.define<TaskInstance, TaskAttributes>(
     trainer_id: {
       type: DataTypes.UUID,
       allowNull: false,
+      references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
     },
 
     reference_file_url: {

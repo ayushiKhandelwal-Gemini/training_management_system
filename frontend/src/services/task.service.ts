@@ -9,9 +9,13 @@ const toTaskFormData = (payload: CreateTaskPayload) => {
   if (payload.reference_file) {
     formData.append("reference_file", payload.reference_file);
   }
+  if (payload.student_ids && payload.student_ids.length > 0) {
+    formData.append("student_ids", JSON.stringify(payload.student_ids));
+  }
 
   return formData;
 };
+
 
 export const getTasks = async (): Promise<Task[]> => {
   const response = await axiosInstance.get<ApiResponse<Task[]>>("/tasks");

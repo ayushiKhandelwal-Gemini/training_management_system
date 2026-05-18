@@ -8,7 +8,7 @@ import path from "path";
 import taskRoutes from "./routes/task.routes";
 import taskAssignmentRoutes from "./routes/taskAssignment.routes";
 import submissionRoutes from "./routes/submission.routes";
-import "./models"; // Import to initialize associations
+import "./models";
 import dashboardRoutes from "./routes/dashboard.routes";
 import studentRoutes from "./routes/student.routes";
 import profileRoutes from "./routes/profile.routes";

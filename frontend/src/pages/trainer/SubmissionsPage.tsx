@@ -23,6 +23,7 @@ type SubmissionRow =
 const SubmissionsPage = () => {
   const [filter, setFilter] = useState<SubmissionFilter>("ALL");
   const [activeSubmission, setActiveSubmission] = useState<Submission | null>(null);
+  const [popoverSubmissionId, setPopoverSubmissionId] = useState<number | string | null>(null);
   const { data = [], isLoading } = useTrainerSubmissions();
   const { data: assignments = [], isLoading: assignmentsLoading } = useTrainerAssignments();
   const reviewMutation = useReviewSubmission();
@@ -86,7 +87,35 @@ const SubmissionsPage = () => {
           {assignment?.task?.title ?? "Task unavailable"}
         </td>
         <td className="px-4 py-3 text-sm text-slate-600">
-          {assignment?.student?.name ?? "Student unavailable"}
+          {submission.status === "REVIEWED" ? (
+            <div
+              className="relative inline-block"
+              onMouseEnter={() => setPopoverSubmissionId(submission.id)}
+              onMouseLeave={() => setPopoverSubmissionId(null)}
+            >
+              <button
+                type="button"
+                onClick={() =>
+                  setPopoverSubmissionId((prev) => (prev === submission.id ? null : submission.id))
+                }
+                aria-haspopup="dialog"
+                className="font-semibold text-slate-950 underline-offset-2 hover:underline"
+                title={`Marks: ${submission.marks ?? "-"}\nRemarks: ${submission.remarks ?? "-"}`}
+              >
+                {assignment?.student?.name ?? "Student unavailable"}
+              </button>
+
+              {popoverSubmissionId === submission.id && (
+                <div className="absolute right-0 z-50 mt-2 w-64 rounded border bg-white p-3 text-sm shadow">
+                  <p className="text-xs font-semibold text-slate-700">Review details</p>
+                  <p className="mt-2 text-sm text-slate-900">Marks: {submission.marks ?? "-"}</p>
+                  <p className="mt-1 text-sm text-slate-700">Remarks: {submission.remarks ?? "-"}</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            assignment?.student?.name ?? "Student unavailable"
+          )}
         </td>
         <td className="px-4 py-3"><StatusBadge status={submission.status} /></td>
         <td className="px-4 py-3 text-sm text-slate-600">{formatDateTime(submission.submitted_at)}</td>

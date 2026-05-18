@@ -18,7 +18,7 @@ export const sequelize = databaseUrl
   : new Sequelize(
       process.env.DB_NAME ?? "tms_db",
       process.env.DB_USER ?? "postgres",
-      process.env.DB_PASSWORD ?? "12345",
+      process.env.DB_PASSWORD ?? "postgres",
       {
         host: process.env.DB_HOST ?? "localhost",
         port: Number(process.env.DB_PORT ?? 5432),

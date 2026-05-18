@@ -27,6 +27,14 @@ export const createTaskSchema = Joi.object({
 
   reference_file_url: Joi.string()
     .optional(),
+
+  student_ids: Joi.array()
+    .items(Joi.string().uuid())
+    .optional()
+    .messages({
+      "array.base": "student_ids must be an array",
+      "array.includes": "Each student_id must be a valid UUID",
+    }),
 });
 
 export const updateTaskSchema = Joi.object({
@@ -45,4 +53,12 @@ export const updateTaskSchema = Joi.object({
 
   reference_file_url: Joi.string()
     .optional(),
+
+  student_ids: Joi.array()
+    .items(Joi.string().uuid())
+    .optional()
+    .messages({
+      "array.base": "student_ids must be an array",
+      "array.includes": "Each student_id must be a valid UUID",
+    }),
 });

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { getApiErrorMessage } from "../api/axios";
 import { createTask, deleteTask, getTask, getTasks, updateTask } from "../services/task.service";
 
@@ -14,6 +15,7 @@ export const useTask = (id: string) =>
   useQuery({ queryKey: taskKeys.detail(id), queryFn: () => getTask(id), enabled: Boolean(id) });
 
 export const useCreateTask = () => {
+   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -21,6 +23,7 @@ export const useCreateTask = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: taskKeys.all });
       toast.success("Task created");
+      navigate("/trainer/tasks")
     },
     onError: (error) => toast.error(getApiErrorMessage(error)),
   });
@@ -28,6 +31,8 @@ export const useCreateTask = () => {
 
 export const useUpdateTask = () => {
   const queryClient = useQueryClient();
+   const navigate = useNavigate();
+
 
   return useMutation({
     mutationFn: updateTask,
@@ -35,6 +40,7 @@ export const useUpdateTask = () => {
       queryClient.invalidateQueries({ queryKey: taskKeys.all });
       queryClient.invalidateQueries({ queryKey: taskKeys.detail(task.id) });
       toast.success("Task updated");
+      navigate("/trainer/tasks")
     },
     onError: (error) => toast.error(getApiErrorMessage(error)),
   });

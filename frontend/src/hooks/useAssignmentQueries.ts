@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { getApiErrorMessage } from "../api/axios";
 import { assignTask, getMyAssignments, getTrainerAssignments } from "../services/assignment.service";
+import { taskKeys } from "./useTaskQueries";
 
 export const assignmentKeys = {
   trainer: ["assignments", "trainer"] as const,
@@ -21,6 +22,7 @@ export const useAssignTask = () => {
     mutationFn: assignTask,
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: assignmentKeys.trainer });
+      queryClient.invalidateQueries({ queryKey: taskKeys.all });
       toast.success(`Assigned ${result.assigned} student(s)`);
     },
     onError: (error) => toast.error(getApiErrorMessage(error)),

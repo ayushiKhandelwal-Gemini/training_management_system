@@ -35,6 +35,7 @@ export interface Task {
   deadline: string;
   trainer_id: string;
   reference_file_url?: string | null;
+  student_ids?: string[];
   created_at?: string;
   updated_at?: string;
 }
@@ -97,9 +98,10 @@ export interface StudentDashboardStats {
 
 export interface CreateTaskPayload {
   title: string;
-  description?: string;
+  description: string;
   deadline: string;
   reference_file?: File | null;
+  student_ids: string[];
 }
 
 export interface AssignTaskPayload {
