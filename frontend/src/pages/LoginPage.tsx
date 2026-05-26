@@ -57,7 +57,7 @@ const LoginPage = () => {
                   <Input
                     label="Email"
                     type="email"
-                    placeholder="trainer@example.com"
+                    placeholder="user@example.com"
                     error={touched.email && errors.email}
                     {...getFieldProps("email")}
                   />
